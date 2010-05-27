@@ -1,0 +1,5 @@
+Proboscis
+=========
+
+A simple command-line tail utility for mongodb. Requires pymongo.
+
