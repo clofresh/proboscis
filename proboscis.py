@@ -1,13 +1,17 @@
 import sys
 import time
+from ConfigParser import ConfigParser
 from datetime import datetime
 
 import pymongo
 
-db_name = 'mongolog'
-collection_name = 'log'
-time_key = 'created'
-message_key = 'msg'
+config = ConfigParser()
+config.read(['proboscis.conf'])
+
+db_name = config.get('mongodb', 'db')
+collection_name = config.get('mongodb', 'collection')
+time_key = config.get('fields', 'time')
+message_key = config.get('fields', 'message')
 
 db = pymongo.Connection()[db_name]
 
