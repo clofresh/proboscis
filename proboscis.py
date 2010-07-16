@@ -12,6 +12,7 @@ db_name = config.get('mongodb', 'db')
 collection_name = config.get('mongodb', 'collection')
 time_key = config.get('fields', 'time')
 message_key = config.get('fields', 'message')
+timestamp_format = config.get('output', 'timestamp_format')
 
 db = pymongo.Connection()[db_name]
 
@@ -28,9 +29,11 @@ while True:
     
     for row in db[collection_name].find(query).sort(time_key, pymongo.ASCENDING):
         message = row.get(message_key, None)
+        timestamp = float(row[time_key])
+        
         if message:
-            print datetime.fromtimestamp(float(row[time_key])).strftime('%Y-%m-%d %H:%M:%S.%f:\t'),
+            print datetime.fromtimestamp(timestamp).strftime(timestamp_format),
             print message
-        last_time = max(last_time, row[time_key])
+        last_time = max(last_time, timestamp)
     
     time.sleep(1)
