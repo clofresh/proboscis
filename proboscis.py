@@ -8,13 +8,14 @@ import pymongo
 config = ConfigParser()
 config.read(['proboscis.conf'])
 
+host = config.get('mongodb', 'host')
 db_name = config.get('mongodb', 'db')
 collection_name = config.get('mongodb', 'collection')
 time_key = config.get('fields', 'time')
 message_key = config.get('fields', 'message')
 timestamp_format = config.get('output', 'timestamp_format')
 
-db = pymongo.Connection()[db_name]
+db = pymongo.Connection(host)[db_name]
 
 if len(sys.argv) > 1:
     filter_query = eval(sys.argv[1])
