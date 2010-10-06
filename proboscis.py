@@ -2,13 +2,19 @@ import sys
 import time
 from ConfigParser import ConfigParser
 from datetime import datetime
+from optparse import OptionParser
 
 import pymongo
+
+parser = OptionParser()
+parser.add_option("-s", "--server", action="store", dest="server", default="localhost",
+                  help="The server where mongodb resides")
+options, args = parser.parse_args()    
 
 config = ConfigParser()
 config.read(['proboscis.conf'])
 
-host = config.get('mongodb', 'host')
+host = options.server
 db_name = config.get('mongodb', 'db')
 collection_name = config.get('mongodb', 'collection')
 time_key = config.get('fields', 'time')
@@ -17,8 +23,8 @@ timestamp_format = config.get('output', 'timestamp_format')
 
 db = pymongo.Connection(host)[db_name]
 
-if len(sys.argv) > 1:
-    filter_query = eval(sys.argv[1])
+if len(args) > 0:
+    filter_query = eval(args[0])
 else:
     filter_query = {}
 
